@@ -25,9 +25,11 @@ async fn jsondata(counter: Data<Mutex<i32>>) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     env_logger::init();
 
+    let data = Data::new(Mutex::new(0));
+
     HttpServer::new(move || {
         App::new()
-            .data(Mutex::new(0))
+            .app_data(data.clone())
             .service(hello)
             .service(jsondata)
             .service(Files::new("/", "./dist/").index_file("index.html"))
